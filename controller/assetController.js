@@ -3,6 +3,7 @@ const Nft= require('../models/Nft')
 const { response, request } = require("express");
 const OpenseaScraper = require("opensea-scraper");
 const { formatPriceAsset } = require("../helpers/formateadorPrecio");
+const formateadorAsset = require("../helpers/formateadorAsset");
 axios.defaults.timeout = 30000;
 
 const getContract = async (slug) => {
@@ -89,7 +90,7 @@ const getFullAsets = async (req = request, res = response) => {
       console.log(i);
       i++;
       await new Promise((resolve) => setTimeout(resolve, 2000));
-    } while (next !== null);
+    } while (next !== null &&i<2);
 
 
 
@@ -124,18 +125,10 @@ const getFullAsets = async (req = request, res = response) => {
         asset.last_sale.total_price
         )
       : 0;
-      const data={
-        name:asset.name,
-        slug:asset.collection.slug,
-        price:asset.num_sales,
-        image:asset.image_original_url,
-        rank:asset.rank,
-        permalink:asset.permalink,
-        
-
-
-      }
+      var name2 = Buffer.from(asset.name, 'utf-8').toString();
+      const data=formateadorAsset(asset);
       const nft = new Nft(data);
+
       await nft.save();
     })
 
