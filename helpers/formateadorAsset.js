@@ -20,7 +20,7 @@ const formateadorAsset = (asset) => {
     asset_contract_image_url: asset.asset_contract.image_url?asset.asset_contract.image_url:null   ,
     asset_contract_name:asset.asset_contract.name ? asset.asset_contract.name : null,
     asset_contract_nft_version:asset.asset_contract.nft_version  ? asset.asset_contract.nft_version : null,
-    only_proxied_transfers:asset.asset_contract.only_proxied_transfers?asset.asset_contract.only_proxied_transfers:null,
+    asset_only_proxied_transfers:asset.asset_contract.only_proxied_transfers?asset.asset_contract.only_proxied_transfers:null,
     asset_contract_opensea_buyer_fee_basis_points:asset.asset_contract.opensea_buyer_fee_basis_points ? asset.asset_contract.opensea_buyer_fee_basis_points : null,
     asset_contract_opensea_seller_fee_basis_points:asset.asset_contract.opensea_seller_fee_basis_points ? asset.asset_contract.opensea_seller_fee_basis_points : null,
     asset_contract_symbol:asset.asset_contract.symbol?asset.asset_contract.symbol:null,
@@ -64,6 +64,7 @@ const formateadorAsset = (asset) => {
     top_bid:asset.top_bid   ? asset.top_bid : null,
     transfer_fee:asset.transfer_fee   ? asset.transfer_fee : null,
     transfer_fee_payment_token:asset.transfer_fee_payment_token   ? asset.transfer_fee_payment_token : null,
+    traits:asset.traits   ? JSON.stringify(asset.traits) : null,
   };
 
 

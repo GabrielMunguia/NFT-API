@@ -4,7 +4,7 @@ const { response, request } = require("express");
 const OpenseaScraper = require("opensea-scraper");
 const { formatPriceAsset } = require("../helpers/formateadorPrecio");
 const formateadorAsset = require("../helpers/formateadorAsset");
-const Trait = require("../models/traits");
+const assetAdapter=require('../adapters/assetAdapter')
 axios.defaults.timeout = 30000;
 
 const getContract = async (slug) => {
@@ -90,7 +90,7 @@ const getFullAsets = async (req = request, res = response) => {
       console.log(i);
       i++;
       await new Promise((resolve) => setTimeout(resolve, 2000));
-    } while (next !== null );
+    } while (next !== null  );
 
     // for (let i = 0; i < assets.length; i++) {
     //   let suma = 0;
@@ -206,13 +206,7 @@ console.log('legoooo al sort')
       const data=formateadorAsset(asset);
       const nft = new Nft(data);
 
-      assets[i].traits.forEach(async (trait)=>{
-      
-        trait["token_id"]=asset.token_id
-        const traits= new Trait(trait);
-        await traits.save();
-      }
-      )
+     
       
    
     
@@ -250,7 +244,13 @@ const getFullAsetsBySlug = async (req, res) => {
       slug,
     },
   });
-  res.json({ size: assets.length, assets });
+
+  const array=[];
+  assets.forEach(asset=>{
+    array.push(assetAdapter(asset));
+  });
+
+  res.json({ size: assets.length, array });
 };
 module.exports = {
   getAssets,

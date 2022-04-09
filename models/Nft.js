@@ -69,7 +69,7 @@ const Nft = db.define('Nft', {
         type: DataTypes.STRING,
     },
     description:{
-        type: DataTypes.STRING,
+        type: DataTypes.TEXT,
     },
     external_link:{
         type: DataTypes.STRING,
@@ -173,6 +173,9 @@ const Nft = db.define('Nft', {
     transfer_fee_payment_token:{
         type: DataTypes.STRING,
     },
+    traits:{
+        type: DataTypes.TEXT,
+    }
 
    
  
