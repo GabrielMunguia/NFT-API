@@ -1,7 +1,8 @@
 const axios = require("axios");
-
+const Nft= require('../models/Nft')
 const { response, request } = require("express");
 const OpenseaScraper = require("opensea-scraper");
+const { formatPriceAsset } = require("../helpers/formateadorPrecio");
 axios.defaults.timeout = 30000;
 
 const getContract = async (slug) => {
@@ -116,14 +117,43 @@ const getFullAsets = async (req = request, res = response) => {
     }
 
 
+    assets.map(async (asset)=>{
+      const price =asset.last_sale !== null
+      ? formatPriceAsset(
+        asset.last_sale.payment_token.decimals,
+        asset.last_sale.total_price
+        )
+      : 0;
+      const data={
+        name:asset.name,
+        slug:asset.collection.slug,
+        price:asset.num_sales,
+        image:asset.image_original_url,
+        rank:asset.rank,
+        permalink:asset.permalink,
+        
+
+
+      }
+      const nft = new Nft(data);
+      await nft.save();
+    })
+
+
 
     //guardar archivo json
-    const data = JSON.stringify(assets);
-    const fs = require("fs");
-    fs.writeFile(`./public/assets/${slug}.json`, data, (err) => {
-      if (err) throw err;
-      console.log("The file has been saved!");
-    });
+    // const data = JSON.stringify(assets);
+    // const fs = require("fs");
+    // fs.writeFile(`./public/assets/${slug}.json`, data, (err) => {
+    //   if (err) throw err;
+    //   console.log("The file has been saved!");
+    // });
+
+
+
+
+
+    
 
     res.json({
       status: true,
@@ -140,7 +170,18 @@ const getFullAsets = async (req = request, res = response) => {
   }
 };
 
+
+const getFullAsetsBySlug = async( req  , res ) => {
+const { slug } = req.params;
+  const assets = await Nft.findAll( {
+    where: {
+      slug
+    }
+  });
+  res.json({size:assets.length, assets });
+}
 module.exports = {
   getAssets,
   getFullAsets,
+  getFullAsetsBySlug
 };
