@@ -143,7 +143,7 @@ const getFullAsets = async (req = request, res = response) => {
       let totalRarity = 0;
 
       for(let j = 0; j < current.traits.length; j++){
-        let rarityScore= 1/(tally[current[j].trait_type][current[j].trait_value]/assets.length);
+        let rarityScore= 8*(1/(tally[current[j].trait_type][current[j].trait_value]/assets.length));
         current.rarityScore= rarityScore;
         totalRarity+= rarityScore;
       }
