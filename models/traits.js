@@ -1,7 +1,7 @@
 const { DataTypes } =require( 'sequelize');
 const  db = require( '../db/conexion');
 
-const Trait = db.define('Nft', {
+const Trait = db.define('Trait', {
 
     display_type:{
         type: DataTypes.STRING,
@@ -13,7 +13,7 @@ const Trait = db.define('Nft', {
         type: DataTypes.STRING,
        },
        trait_count:{
-        type: DataTypes.STRING,
+        type: DataTypes.INTEGER,
        },
        trait_type:{
         type: DataTypes.STRING,
@@ -22,6 +22,9 @@ const Trait = db.define('Nft', {
        value:{
         type: DataTypes.STRING,
        },
+       token_id:{
+        type: DataTypes.INTEGER,
+         }
 
 
  
