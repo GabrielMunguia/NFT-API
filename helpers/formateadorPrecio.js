@@ -12,9 +12,9 @@
 
     if (decimals[0] > "0") {
       if (decimals.substr(-1) === "0") {
-        return (resp +=
+        return parseFloat((resp +=
           "." +
-          price.substr(price.length - decimal, price.length - decimal - 1));
+          price.substr(price.length - decimal, price.length - decimal - 1)));
       }
 
       resp +=
@@ -22,10 +22,10 @@
     }
     
     if(resp.trim()===""){
-      return "-"
+      return 0;
     }
 
-    return resp;
+    return parseFloat(resp);
   };
   module.exports={
     formatPriceAsset

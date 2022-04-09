@@ -3,6 +3,8 @@ const Nft = require("../models/Nft");
 const { response, request } = require("express");
 const OpenseaScraper = require("opensea-scraper");
 const { formatPriceAsset } = require("../helpers/formateadorPrecio");
+const formateadorAsset = require("../helpers/formateadorAsset");
+const assetAdapter=require('../adapters/assetAdapter')
 axios.defaults.timeout = 30000;
 
 const getContract = async (slug) => {
@@ -88,7 +90,7 @@ const getFullAsets = async (req = request, res = response) => {
       console.log(i);
       i++;
       await new Promise((resolve) => setTimeout(resolve, 2000));
-    } while (next !== null);
+    } while (next !== null  );
 
     // for (let i = 0; i < assets.length; i++) {
     //   let suma = 0;
@@ -102,14 +104,18 @@ const getFullAsets = async (req = request, res = response) => {
     // }
 
     //Sacar el rarity score de cada item
-
+console.log("antes calcular rarity")
     let tally = { TraitCount: {} };
 
     for (let i = 0; i < assets.length; i++) {
-      let nftTraits = assets[i].map((e) => e.trait_type);
-      let nftValues = assets[i].map((e) => e.trait_value);
-      let numOfTraits = nftTraits.length;
 
+    
+      let nftTraits = assets[i].traits.map((e) => e.trait_type);
+     
+      let nftValues = assets[i].traits.map((e) => e.trait_value);
+  
+      let numOfTraits = nftTraits.length;
+   
       if (tally.TraitCount[numOfTraits]) {
         tally.TraitCount[numOfTraits]++;
       } else {
@@ -139,16 +145,25 @@ const getFullAsets = async (req = request, res = response) => {
     const nftArr=[];
 
     for(let i = 0; i < assets.length; i++){
-      let current= assets[i];
+      let current= assets[i].traits;
       let totalRarity = 0;
 
+<<<<<<< HEAD
       for(let j = 0; j < current.traits.length; j++){
         let rarityScore= 8*(1/(tally[current[j].trait_type][current[j].trait_value]/assets.length));
+=======
+ 
+      for(let j = 0; j < current.length; j++){
+
+        let rarityScore= 1/(tally[current[j].trait_type][current[j].trait_value]/assets.length);
+     
+>>>>>>> bbf854177b7c0c25e47ae87cb2bf5c6262fb40a0
         current.rarityScore= rarityScore;
+        console.log('c2')
         totalRarity+= rarityScore;
       }
 
-      let rarityScoreNumTraits= 1/(tally.TraitCount[Object.keys(current).length]/assets.length);
+      let rarityScoreNumTraits= 8*(1/(tally.TraitCount[Object.keys(current).length]/assets.length));
 
       current.push({
         trait_type:"TraitCount",
@@ -181,7 +196,7 @@ const getFullAsets = async (req = request, res = response) => {
     }
     //-----------
 
-
+console.log('legoooo al sort')
 
     assets.sort((a, b) => b.rarityScore - a.rarityScore);
 
@@ -189,24 +204,19 @@ const getFullAsets = async (req = request, res = response) => {
       assets[i].rank = i + 1;
     }
 
-    assets.map(async (asset) => {
-      const price =
-        asset.last_sale !== null
-          ? formatPriceAsset(
-              asset.last_sale.payment_token.decimals,
-              asset.last_sale.total_price
-            )
-          : 0;
-      const data = {
-        name: asset.name,
-        slug: asset.collection.slug,
-        price: asset.num_sales,
-        image: asset.image_original_url,
-        rank: asset.rank,
-        permalink: asset.permalink,
-      };
+    console.log('llegoo')
+    assets.map(async (asset)=>{
+   
+
+      const data=formateadorAsset(asset);
       const nft = new Nft(data);
+
+     
+      
+   
+    
       await nft.save();
+  
     });
 
     //guardar archivo json
@@ -239,7 +249,13 @@ const getFullAsetsBySlug = async (req, res) => {
       slug,
     },
   });
-  res.json({ size: assets.length, assets });
+
+  const array=[];
+  assets.forEach(asset=>{
+    array.push(assetAdapter(asset));
+  });
+
+  res.json({ size: assets.length, array });
 };
 module.exports = {
   getAssets,
