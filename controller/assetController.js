@@ -90,7 +90,7 @@ const getFullAsets = async (req = request, res = response) => {
       console.log(i);
       i++;
       await new Promise((resolve) => setTimeout(resolve, 2000));
-    } while (next !== null &&i<1);
+    } while (next !== null );
 
     // for (let i = 0; i < assets.length; i++) {
     //   let suma = 0;
