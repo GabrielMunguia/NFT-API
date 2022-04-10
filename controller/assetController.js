@@ -6,6 +6,8 @@ const { formatPriceAsset } = require("../helpers/formateadorPrecio");
 const formateadorAsset = require("../helpers/formateadorAsset");
 const assetAdapter=require('../adapters/assetAdapter')
 axios.defaults.timeout = 30000;
+const rarityRank= require('../utils/rarityScoreV2');
+const calculateRankOpenSea= require('../utils/rarityScoreV1');
 
 const getContract = async (slug) => {
   //peticion fetch get con header
@@ -104,106 +106,13 @@ const getFullAsets = async (req = request, res = response) => {
     // }
 
     //Sacar el rarity score de cada item
-console.log("antes calcular rarity")
-    let tally = { TraitCount: {} };
-
-    for (let i = 0; i < assets.length; i++) {
-
-    
-      let nftTraits = assets[i].traits.map((e) => e.trait_type);
-     
-      let nftValues = assets[i].traits.map((e) => e.trait_value);
   
-      let numOfTraits = nftTraits.length;
-   
-      if (tally.TraitCount[numOfTraits]) {
-        tally.TraitCount[numOfTraits]++;
-      } else {
-        tally.TraitCount[numOfTraits] = 1;
-      }
-
-      for (let j = 0; j < nftTraits.length; j++) {
-        let current = nftTraits[j];
-        if (tally[current]) {
-          tally[current].occurences++;
-        } else {
-          tally[current] = { occurences: 1 };
-        }
-
-        let currentValue = nftValues[j];
-        if (tally[current][currentValue]) {
-          tally[current][currentValue]++;
-        } else {
-          tally[current][currentValue] = 1;
-        }
-
-      }
-    }
-    ///--------------
-
-    const collectionAttributes = Object.keys(tally);
-    const nftArr=[];
-
-    for(let i = 0; i < assets.length; i++){
-      let current= assets[i].traits;
-      let totalRarity = 0;
-
-<<<<<<< HEAD
-      for(let j = 0; j < current.traits.length; j++){
-        let rarityScore= 8*(1/(tally[current[j].trait_type][current[j].trait_value]/assets.length));
-=======
- 
-      for(let j = 0; j < current.length; j++){
-
-        let rarityScore= 1/(tally[current[j].trait_type][current[j].trait_value]/assets.length);
-     
->>>>>>> bbf854177b7c0c25e47ae87cb2bf5c6262fb40a0
-        current.rarityScore= rarityScore;
-        console.log('c2')
-        totalRarity+= rarityScore;
-      }
-
-      let rarityScoreNumTraits= 8*(1/(tally.TraitCount[Object.keys(current).length]/assets.length));
-
-      current.push({
-        trait_type:"TraitCount",
-        value:Object.keys(current).length,
-        rarityScore:rarityScoreNumTraits
-      });
-      totalRarity+= rarityScoreNumTraits;
-
-
-
-      if(current.length<collectionAttributes.length){
-        let nftAtributes= current.map((e)=>e.trait_type);
-        let absent= collectionAttributes.filter((e)=>!nftAtributes.includes(e));
-
-        absent.forEach(type=>{
-          let rarityScoreNull= 1/((assets.length-tally[type].occurences)/assets.length);
-          current.push({
-            trait_type:type,
-            value:null,
-            rarityScore:rarityScoreNull,
-          });
-          totalRarity+= rarityScoreNull;
-        });
-
-      }
-      assets[i].rarityScore= totalRarity;
-      assets[i].rarityScoreNumTraits= rarityScoreNumTraits;
-      
-
-    }
     //-----------
 
-console.log('legoooo al sort')
+//console.log('legoooo al sort')
 
-    assets.sort((a, b) => b.rarityScore - a.rarityScore);
-
-    for (let i = 0; i < assets.length; i++) {
-      assets[i].rank = i + 1;
-    }
-
+    assets= await rarityRank(assets);
+   
     console.log('llegoo')
     assets.map(async (asset)=>{
    
