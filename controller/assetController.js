@@ -2,14 +2,13 @@ const axios = require("axios");
 const Nft = require("../models/Nft");
 const { response, request } = require("express");
 const OpenseaScraper = require("opensea-scraper");
-const { formatPriceAsset } = require("../helpers/formateadorPrecio");
+
 const formateadorAsset = require("../helpers/formateadorAsset");
 const assetAdapter=require('../adapters/assetAdapter')
 axios.defaults.timeout = 30000;
-const rarityRank= require('../utils/rarityScoreV2');
-const calculateRankOpenSea= require('../utils/rarityScoreV1');
+
 const generateRarity= require('../utils/rarityScoreV3');
-const generateRarityV2= require('../utils/rarityScoreV4');
+
 
 const getContract = async (slug) => {
   //peticion fetch get con header
@@ -100,27 +99,29 @@ const getFullAsets = async (req = request, res = response) => {
     assets= await generateRarity(assets);
    
     console.log('llegoo')
-    assets.map(async (asset)=>{
+    // assets.map(async (asset)=>{
    
 
-      const data=formateadorAsset(asset);
-      const nft = new Nft(data);
+    //   const data=formateadorAsset(asset);
+    //   const nft = new Nft(data);
 
-     
-      
-   
-    
-      await nft.save();
+    //   await nft.save();
   
-    });
-
-    //guardar archivo json
-    // const data = JSON.stringify(assets);
-    // const fs = require("fs");
-    // fs.writeFile(`./public/assets/${slug}.json`, data, (err) => {
-    //   if (err) throw err;
-    //   console.log("The file has been saved!");
     // });
+
+    
+    for(let i=0;i<assets.length;i++){
+      const guardarNft=async()=>{
+       const data=formateadorAsset(assets[i]);
+       const nft = new Nft(data);
+       await nft.save();
+     }
+     await guardarNft();
+      }
+       
+
+
+
 
     res.json({
       status: true,
