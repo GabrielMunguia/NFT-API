@@ -8,6 +8,8 @@ const assetAdapter=require('../adapters/assetAdapter')
 axios.defaults.timeout = 30000;
 const rarityRank= require('../utils/rarityScoreV2');
 const calculateRankOpenSea= require('../utils/rarityScoreV1');
+const generateRarity= require('../utils/rarityScoreV3');
+const generateRarityV2= require('../utils/rarityScoreV4');
 
 const getContract = async (slug) => {
   //peticion fetch get con header
@@ -94,24 +96,8 @@ const getFullAsets = async (req = request, res = response) => {
       await new Promise((resolve) => setTimeout(resolve, 2000));
     } while (next !== null  );
 
-    // for (let i = 0; i < assets.length; i++) {
-    //   let suma = 0;
 
-    //   assets[i].rarityScore = assets[i].traits.reduce((acc, cur) => {
-    //     let rarity = cur.trait_count / assets.length;
-    //     let score = 1 / rarity;
-    //     suma = suma + score;
-    //     return suma;
-    //   }, 0);
-    // }
-
-    //Sacar el rarity score de cada item
-  
-    //-----------
-
-//console.log('legoooo al sort')
-
-    assets= await rarityRank(assets);
+    assets= await generateRarity(assets);
    
     console.log('llegoo')
     assets.map(async (asset)=>{

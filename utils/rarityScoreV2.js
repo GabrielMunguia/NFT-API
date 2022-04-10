@@ -8,7 +8,8 @@ function rarityRank(assets) {
       let nftTraits = assets[i].traits.map((e) => e.trait_type);
      
       let nftValues = assets[i].traits.map((e) => e.value);
-      
+
+    
 
       let numOfTraits = nftTraits.length;
    
