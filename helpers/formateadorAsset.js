@@ -28,7 +28,7 @@ const formateadorAsset = (asset) => {
     creator_address:asset.creator?.address   ? asset.creator.address : null,
     creator_profile_img_url:asset.creator?.profile_img_url   ? asset.creator.profile_img_url : null,
     creator_config:asset.creator?.config   ? asset.creator.config : null,
-    creator_username:asset.creator?.user.username   ? asset.creator.user.username : null,
+    creator_username:asset.creator?.user?.username   ? asset.creator.user.username : null,
     description:asset.description   ? asset.description : null,
     external_link:asset.external_link   ? asset.external_link : null,
     image_original_url:asset.image_original_url      ? asset.image_original_url : null,
