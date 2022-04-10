@@ -159,7 +159,7 @@ const Nft = db.define('Nft', {
         type: DataTypes.STRING,
     },
     token_id:{
-        type: DataTypes.INTEGER,
+        type: DataTypes.BIGINT,
     },
     token_metadata:{
         type: DataTypes.STRING,

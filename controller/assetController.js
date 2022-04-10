@@ -111,10 +111,18 @@ const getFullAsets = async (req = request, res = response) => {
 
     
     for(let i=0;i<assets.length;i++){
+      console.log('legoooo al for')
       const guardarNft=async()=>{
        const data=formateadorAsset(assets[i]);
        const nft = new Nft(data);
-       await nft.save();
+      //  const existeNft= await Nft.findOne({where:{token_id:nft.token_id}});
+  
+      //  if(!existeNft){
+        await nft.save();
+      //  }else{
+      //   await Nft.update(data,{where:{token_id:nft.token_id}});
+      //  }
+     
      }
      await guardarNft();
       }
