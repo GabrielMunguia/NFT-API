@@ -1,7 +1,7 @@
 const axios = require("axios");
 const Nft = require("../models/Nft");
 const { response, request } = require("express");
-const OpenseaScraper = require("opensea-scraper");
+
 
 const formateadorAsset = require("../helpers/formateadorAsset");
 const assetAdapter=require('../adapters/assetAdapter')
