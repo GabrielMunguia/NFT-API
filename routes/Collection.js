@@ -1,14 +1,14 @@
 const {Router}= require('express');
-const { getCollections } = require('../controller/collectionController');
+const {  getCollectionsDay, getCollectionsWeek, getCollectionsMoth, } = require('../controller/collectionController');
 
 
 
 const router = Router();
 
 
-router.get('/',getCollections);
-
-
+router.get('/day',getCollectionsDay);
+router.get('/week',getCollectionsWeek);
+router.get('/month',getCollectionsMoth);
 
 module.exports=router;
 
