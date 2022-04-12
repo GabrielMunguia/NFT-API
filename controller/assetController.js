@@ -2,13 +2,16 @@ const axios = require("axios");
 const Nft = require("../models/Nft");
 const { response, request } = require("express");
 const formateadorAsset = require("../helpers/formateadorAsset");
-const assetAdapter=require('../adapters/assetAdapter')
-
-const generateRarity= require('../utils/rarityScoreV3');
+const assetAdapter = require("../adapters/assetAdapter");
+const Sequelize = require("sequelize");
+const Op = Sequelize.Op;
+const generateRarity = require("../utils/rarityScoreV3");
 
 axios.defaults.timeout = 30000;
 
 
+
+//Guarda todos los assets de una colleccion;
 const saveAllAssets = async (req = request, res = response) => {
   try {
     const { slug } = req.params;
@@ -19,7 +22,6 @@ const saveAllAssets = async (req = request, res = response) => {
     };
 
     let assets = [];
-
 
     let next = null;
     let i = 0;
@@ -41,36 +43,23 @@ const saveAllAssets = async (req = request, res = response) => {
 
         assets = assets.concat(resp.data.assets);
         next = resp.data.next;
-
       }
       console.log(i);
       i++;
       await new Promise((resolve) => setTimeout(resolve, 2000));
-    } while (next !== null  );
+    } while (next !== null);
 
+    assets = await generateRarity(assets);
 
-    assets= await generateRarity(assets);
-   
-
- 
-
-    
-    for(let i=0;i<assets.length;i++){
-      console.log('legoooo al for')
-      const guardarNft=async()=>{
-       const data=formateadorAsset(assets[i]);
-       const nft = new Nft(data);
+    for (let i = 0; i < assets.length; i++) {
+      const guardarNft = async () => {
+        const data = formateadorAsset(assets[i]);
+        const nft = new Nft(data);
 
         await nft.save();
-
-     
-     }
-     await guardarNft();
-      }
-       
-
-
-
+      };
+      await guardarNft();
+    }
 
     res.json({
       status: true,
@@ -79,6 +68,7 @@ const saveAllAssets = async (req = request, res = response) => {
       size: assets.length,
     });
   } catch (error) {
+    console.log(error.message);
     res.status(500).json({
       status: false,
       msg: "ERORRR",
@@ -87,23 +77,81 @@ const saveAllAssets = async (req = request, res = response) => {
   }
 };
 
+
+
+
+
+
+//Devuelve todos los assets por slug 
 const getFullAsetsBySlug = async (req, res) => {
-  const { slug } = req.params;
-  const assets = await Nft.findAll({
-    where: {
+  try {
+
+
+    const { slug } = req.params;
+    const { page = 1, traits } = req.query;
+
+    const limit = 24;
+    const offset = (page - 1) * limit;
+    const traitsQuery=req.traitsQuery;
+    
+ 
+
+ 
+
+    const where = traitsQuery?{
+      
+        slug,
+        traits: {
+          [Op.or]: traitsQuery.map((trait) => {
+            return Sequelize.where(
+              Sequelize.fn("LOWER", Sequelize.col("traits")),
+              "LIKE",
+              `%${trait}%`
+            );
+          }),
+        },
+  
+
+
+    }:{
       slug,
-    },
-  });
+    }
 
-  const array=[];
-  assets.forEach(asset=>{
-    array.push(assetAdapter(asset));
-  });
+    const {rows,count} = await Nft.findAndCountAll({
+      limit,
+      offset,
+      where,
+    });
+    const assets= rows.map(asset=>{
+      return assetAdapter(asset);
+    })
 
-  res.json({ size: assets.length, array });
+    
+    res.json({
+      status: true,
+      page,
+      total_pages: Math.ceil(count / limit),
+      count,
+      assets,
+    
+     
+    });
+
+
+  } catch (error) {
+    res.status(500).json({
+      status: false,
+      msg: "Ocurrio un error!",
+      error: error.message,
+    });
+  }
+
 };
-module.exports = {
 
- saveAllAssets,
+
+
+
+module.exports = {
+  saveAllAssets,
   getFullAsetsBySlug,
 };
