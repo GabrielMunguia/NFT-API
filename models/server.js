@@ -5,7 +5,8 @@ class Server {
   constructor() {
     this.app = express();
     this.port = process.env.PORT;
-    this.assets='/api/assets'
+    this.assets='/api/assets';
+    this.collections='/api/collections';
 
      //MIDDLEWARES
      this.middleware();
@@ -18,7 +19,8 @@ class Server {
   routes() {
 
 
-    this.app.use(this.assets,require('../routes/Asset') )
+    this.app.use(this.assets,require('../routes/Asset') );
+    this.app.use(this.collections,require('../routes/Collection') );
   }
   async dbConnection() {
 

@@ -1,7 +1,7 @@
 const { Sequelize } = require('sequelize');
 
 
-const db = new Sequelize('nft_api', 'root', 'root', {
+const db = new Sequelize('nft_api', 'nft', '', {
     host: 'localhost',
     dialect: 'mysql',
     pool: {

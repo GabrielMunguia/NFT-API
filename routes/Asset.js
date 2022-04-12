@@ -1,11 +1,11 @@
 const {Router}= require('express');
 
-const { getAssets, getFullAsets, getFullAsetsBySlug } = require('../controller/assetController');
+const { saveAllAssets, getFullAsetsBySlug } = require('../controller/assetController');
 const router = Router();
 
-router.get('/:slug',getAssets);
-router.get('/full/:slug',getFullAsetsBySlug);
-router.post('/:slug',getFullAsets);
+
+router.get('/:slug',getFullAsetsBySlug);
+router.post('/:slug',saveAllAssets);
 
 
 module.exports=router;
