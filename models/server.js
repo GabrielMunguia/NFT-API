@@ -1,4 +1,5 @@
 const express = require("express");
+const compression = require('compression')
 const cors = require('cors');
 const db = require("../db/conexion");
 class Server {
@@ -14,6 +15,8 @@ class Server {
     this.routes();
     //CONEXION A LA BASE DE DATOS
     this.dbConnection();
+    //COmpresion de archivos
+    
   }
 
   routes() {
@@ -21,6 +24,7 @@ class Server {
 
     this.app.use(this.assets,require('../routes/Asset') );
     this.app.use(this.collections,require('../routes/Collection') );
+    this.app.use(compression())
   }
   async dbConnection() {
 
