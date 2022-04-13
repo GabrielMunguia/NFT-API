@@ -63,7 +63,7 @@ const saveAllAssets = async (req = request, res = response) => {
 
     res.json({
       status: true,
-      msg: "GET API DESDE CONTROLADOR ASSET",
+      msg: "Se agregaron correctamente los assets",
       slug,
       size: assets.length,
     });
@@ -84,68 +84,27 @@ const saveAllAssets = async (req = request, res = response) => {
 
 //Devuelve todos los assets por slug 
 const getFullAsetsBySlug = async (req, res) => {
-  try {
-
-
-    const { slug } = req.params;
-    const { page = 1, traits } = req.query;
-
-    const limit = 24;
-    const offset = (page - 1) * limit;
-    const traitsQuery=req.traitsQuery;
-    
- 
-
- 
-
-    const where = traitsQuery?{
-      
-        slug,
-        traits: {
-          [Op.or]: traitsQuery.map((trait) => {
-            return Sequelize.where(
-              Sequelize.fn("LOWER", Sequelize.col("traits")),
-              "LIKE",
-              `%${trait}%`
-            );
-          }),
-        },
-  
-
-
-    }:{
+try {
+  const { slug } = req.params;
+  const assets = await Nft.findAll({
+    where: {
       slug,
-    }
+    },
+  });
 
-    const {rows,count} = await Nft.findAndCountAll({
-      limit,
-      offset,
-      where,
-    });
-    const assets= rows.map(asset=>{
-      return assetAdapter(asset);
-    })
+  const array=[];
+  assets.forEach(asset=>{
+    array.push(assetAdapter(asset));
+  });
 
-    
-    res.json({
-      status: true,
-      page,
-      total_pages: Math.ceil(count / limit),
-      count,
-      assets,
-    
-     
-    });
-
-
-  } catch (error) {
-    res.status(500).json({
-      status: false,
-      msg: "Ocurrio un error!",
-      error: error.message,
-    });
-  }
-
+  res.json({ size: assets.length, array });
+} catch (error) {
+  res.status(500).json({
+    status: false,
+    msg: "Ocurrio un error",
+    error:error.message,
+  })
+}
 };
 
 
