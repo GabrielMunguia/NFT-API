@@ -1,15 +1,11 @@
 const { formatPriceAsset } = require("./formateadorPrecio");
+const main = require('../helpers/getPriceV1');
 
 const formateadorAsset = (asset) => {
   const nuevoAsset = {
     name: asset.name?asset.name : null,   
     slug: asset.collection.slug ? asset.collection.slug : null,
-    price: asset.last_sale !== null
-    ? formatPriceAsset(
-      asset.last_sale.payment_token.decimals,
-      asset.last_sale.total_price
-      )
-    : 0 ,
+    price: main(asset),
     animation_original_url:asset.animation_original_url?asset.animation_original_url:null,   
     animation_url:asset.animation_url?asset.animation_url:null,  
     asset_contract_address: asset.asset_contract.address?asset.asset_contract.address:null,   
