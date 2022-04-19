@@ -40,17 +40,17 @@ function main(asset) {
       current_price_base = current_price_number / Math.pow(10, decimals);
     } else {
 
-      return null;
+      return 0;
     }
 
   
     return current_price_base;
   } else {
   
-    return null;
+    return 0;
   }
  } catch (error) {
-   return null;
+   return 0;
   
  }
 }
