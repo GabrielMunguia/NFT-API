@@ -6,7 +6,7 @@ const formateadorAsset = (asset) => {
     name: asset.name?asset.name : null,   
     slug: asset.collection.slug ? asset.collection.slug : null,
     price: main(asset),
-    serial_number:asset.name.includes('#')?parseInt(asset.name.split('#')[1]):0,
+    serial_number:(asset.name&&asset.name!=="")?(asset.name.includes('#')?parseInt(asset.name.split('#')[1]):0):0,
     animation_original_url:asset.animation_original_url?asset.animation_original_url:null,   
     animation_url:asset.animation_url?asset.animation_url:null,  
     asset_contract_address: asset.asset_contract.address?asset.asset_contract.address:null,   
