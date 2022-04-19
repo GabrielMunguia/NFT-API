@@ -20,7 +20,7 @@ const saveAllCollections = async () => {
         };
 
         let resultStats = null;
-
+console.log(i)
 
         let URL_STATS = `https://api.opensea.io/api/v1/collection/${newObject.slug == null ? "no" : newObject.slug.toString()}/stats`;
         let nameO = "";
@@ -55,7 +55,7 @@ const saveAllCollections = async () => {
                 nameO = "no encontrado";
             }
         }
-        await new Promise((resolve) => setTimeout(resolve, 2000));
+        // await new Promise((resolve) => setTimeout(resolve, 2000));
         if (resultStats !== null) {
             resultStats = resultStats.stats;
 
