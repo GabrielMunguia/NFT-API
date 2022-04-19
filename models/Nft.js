@@ -5,6 +5,9 @@ const Nft = db.define('Nft', {
    name:{
          type: DataTypes.STRING,
    },
+   serial_number:{
+            type: DataTypes.INTEGER,
+    },
    slug:{
     type: DataTypes.STRING,
    },
@@ -192,4 +195,5 @@ const setTabla= async()=>{
     await Nft.sync();
 }
 setTabla();
+
 module.exports = Nft;

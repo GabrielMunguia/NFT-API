@@ -18,7 +18,11 @@ const validarTraits=async  (req,res=response,next)=>{
  
          traitsFilter.forEach((trait) => {
            const { name, value } = trait;
+           if(isNaN(value)){
            traitsQuery.push( `"trait_type":"${name}","value":"${value}"`);
+        }else{
+            traitsQuery.push( `"trait_type":"${name}","value":${value}`);
+        }
          });
  
  

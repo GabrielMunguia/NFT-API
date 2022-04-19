@@ -7,7 +7,7 @@ const Sequelize = require("sequelize");
 const Op = Sequelize.Op;
 const generateRarity = require("../utils/rarityScoreV3");
 
-axios.defaults.timeout = 30000;
+axios.defaults.timeout = 90000000;
 
 
 
@@ -48,19 +48,25 @@ const saveAllAssets = async (req = request, res = response) => {
       console.log(i);
       i++;
       await new Promise((resolve) => setTimeout(resolve, 2000));
-    } while (next !== null);
+    } while (next !== null &&i<1);
 
     assets = await generateRarity(assets);
 
     for (let i = 0; i < assets.length; i++) {
       const guardarNft = async () => {
         const data = formateadorAsset(assets[i]);
-        const nft = new Nft(data);
-
+         const nft= new Nft(data);
         await nft.save();
+
+       
+ 
+        
       };
       await guardarNft();
     }
+    
+  
+
 
     res.json({
       status: true,
@@ -97,10 +103,18 @@ const getFullAsetsBySlug = async (req, res) => {
     const limit = 24;
     const offset = (page - 1) * limit;
     const traitsQuery = req.traitsQuery;
+    const orderBy=req.orderBy;
+    const orders=req.order;
 
 
 
-
+const order=orderBy?[
+  [orderBy, orders],
+ 
+]:[
+  ['rank', 'ASC'],
+ 
+]
 
     const where = traitsQuery ? {
 
@@ -121,11 +135,16 @@ const getFullAsetsBySlug = async (req, res) => {
       slug,
     }
 
+
+
     const { rows, count } = await Nft.findAndCountAll({
       limit,
       offset,
       where,
+      order
     });
+
+
     const assets = rows.map(asset => {
       return assetAdapter(asset);
     })

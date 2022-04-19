@@ -4,6 +4,7 @@ const assetAdapter= (asset)=>{
         collection:{
             slug:asset.slug
         },
+        serial_number:asset.serial_number,
         price:asset.price,
         animation_original_url:asset.animation_original_url,
         animation_url:asset.animation_url,
