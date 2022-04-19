@@ -48,7 +48,7 @@ const saveAllAssets = async (req = request, res = response) => {
       console.log(i);
       i++;
       await new Promise((resolve) => setTimeout(resolve, 2000));
-    } while (next !== null &&i<1);
+    } while (next !== null );
 
     assets = await generateRarity(assets);
 
