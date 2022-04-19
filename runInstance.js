@@ -1,6 +1,7 @@
 require("dotenv").config();
 
-const fork = require('child_process').fork;
+const fork_get_collection = require('child_process').fork;
+const fork_get_assets = require('child_process').fork;
 
 //buscar todos los archivos de la carpeta process
 
@@ -15,3 +16,5 @@ const fork = require('child_process').fork;
 // }
 // );
 
+fork_get_collection('process/process_collection/main.js');
+fork_get_assets('process/job.js');

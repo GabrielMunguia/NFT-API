@@ -36,7 +36,6 @@ const getData = async () => {
 const hacerPeticiones = async () => {
   try {
     const data = await getData();
-console.log('recibi la data')
 
     for (let i = 1; i < data.length; i++) {
 
@@ -103,7 +102,7 @@ const guardarAsset = async (slug) => {
       assets = assets.concat(resp.data.assets);
       next = resp.data.next;
     }
-    console.log(i);
+    console.log("assets:",i);
     i++;
     await new Promise((resolve) => setTimeout(resolve, 2000));
   } while (next !== null );

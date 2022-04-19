@@ -1,3 +1,4 @@
+const cron= require('node-cron');
 const axios = require("axios");
 const Nft_collections = require("../../models/Nft_collections");
 const Sequelize = require("sequelize");
@@ -55,7 +56,7 @@ console.log(i)
                 nameO = "no encontrado";
             }
         }
-        // await new Promise((resolve) => setTimeout(resolve, 2000));
+        await new Promise((resolve) => setTimeout(resolve, 2000));
         if (resultStats !== null) {
             resultStats = resultStats.stats;
 
@@ -127,10 +128,10 @@ console.log(i)
             await saveCollection();
         } else {
             //imprimir urlStats
-            console.log(URL_STATS);
-            console.log(nameO);
+            console.log("run collection :",URL_STATS);
+            /* console.log(nameO);
             console.log(newObject);
-            console.log(resultStats);
+            console.log(resultStats); */
         }
 
 
