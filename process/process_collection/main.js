@@ -1,4 +1,3 @@
-
 const axios = require("axios");
 const Nft_collections = require("../../models/Nft_collections");
 const Sequelize = require("sequelize");
@@ -140,3 +139,8 @@ const saveAllCollections = async () => {
 
 
 saveAllCollections();
+
+// cron job  de una hora
+cron.schedule('*/1 * * * *', () => {
+     saveAllCollections();
+});
