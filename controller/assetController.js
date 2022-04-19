@@ -48,7 +48,7 @@ const saveAllAssets = async (req = request, res = response) => {
       console.log(i);
       i++;
       await new Promise((resolve) => setTimeout(resolve, 2000));
-    } while (next !== null );
+    } while (next !== null);
 
     assets = await generateRarity(assets);
 
@@ -96,49 +96,49 @@ const getFullAsetsBySlug = async (req, res) => {
 
     const limit = 24;
     const offset = (page - 1) * limit;
-    const traitsQuery=req.traitsQuery;
-    
- 
-
- 
-
-    const where = traitsQuery?{
-      
-        slug,
-        traits: {
-          [Op.or]: traitsQuery.map((trait) => {
-            return Sequelize.where(
-              Sequelize.fn("LOWER", Sequelize.col("traits")),
-              "LIKE",
-              `%${trait}%`
-            );
-          }),
-        },
-  
+    const traitsQuery = req.traitsQuery;
 
 
-    }:{
+
+
+
+    const where = traitsQuery ? {
+
+      slug,
+      traits: {
+        [Op.or]: traitsQuery.map((trait) => {
+          return Sequelize.where(
+            Sequelize.fn("LOWER", Sequelize.col("traits")),
+            "LIKE",
+            `%${trait}%`
+          );
+        }),
+      },
+
+
+
+    } : {
       slug,
     }
 
-    const {rows,count} = await Nft.findAndCountAll({
+    const { rows, count } = await Nft.findAndCountAll({
       limit,
       offset,
       where,
     });
-    const assets= rows.map(asset=>{
+    const assets = rows.map(asset => {
       return assetAdapter(asset);
     })
 
-    
+
     res.json({
       status: true,
       page,
       total_pages: Math.ceil(count / limit),
       count,
       assets,
-    
-     
+
+
     });
 
 
@@ -154,8 +154,36 @@ const getFullAsetsBySlug = async (req, res) => {
 
 
 
+const getFullTraitsBySlug = async (req, res) => {
+  try {
+    const { slug } = req.params;
+  const traits=   await Nft.findAll({
+      attributes: ['traits'],
+     where: { slug } ,
+  });
+
+
+  res.status(200).json({
+    status: true,
+    slug,
+    traits
+   
+  })
+} catch (error) {
+  res.status(500).json({
+    status: false,
+    msg: "Ocurrio un error!",
+    error: error.message,
+  });
+}
+}
+
+
+
+
 
 module.exports = {
   saveAllAssets,
   getFullAsetsBySlug,
+  getFullTraitsBySlug
 };

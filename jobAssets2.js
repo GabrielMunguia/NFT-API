@@ -1,9 +1,11 @@
+require("dotenv").config();
 const axios = require("axios");
 const cron = require("node-cron");
-const formateadorAsset = require("../helpers/formateadorAsset");
-const Nft = require("../models/Nft");
-const NftCollection = require("../models/Nft_collections");
-const generateRarity = require("../utils/rarityScoreV3");
+const formateadorAsset = require("./helpers/formateadorAsset");
+const Nft = require("./models/Nft");
+
+const NftCollection = require("./models/Nft_collections");
+const generateRarity = require("./utils/rarityScoreV3");
 axios.defaults.timeout = 90000000;
 
 cron.schedule(' 0 */12 * * *', () => {
@@ -36,8 +38,9 @@ const getData = async () => {
 const hacerPeticiones = async () => {
   try {
     const data = await getData();
+    
 
-    for (let i = 1; i < data.length; i++) {
+    for (let i = 300; i < 600; i++) {
 
 
 

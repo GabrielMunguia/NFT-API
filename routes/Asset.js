@@ -1,6 +1,6 @@
 const {Router}= require('express');
 const { check } = require("express-validator");
-const { saveAllAssets, getFullAsetsBySlug } = require('../controller/assetController');
+const { saveAllAssets, getFullAsetsBySlug, getFullTraitsBySlug } = require('../controller/assetController');
 const { validarCampos } = require('../middlewares/validarCampos');
 const { validarTraits } = require('../middlewares/validarTraits');
 
@@ -16,7 +16,7 @@ router.post('/:slug',[
 ],getFullAsetsBySlug);
 
 
-
+router.post('/traits/:slug',getFullTraitsBySlug);
 router.post('/save/:slug',saveAllAssets);
 
 

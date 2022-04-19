@@ -1,8 +1,8 @@
+require("dotenv").config();
 const cron= require('node-cron');
 const axios = require("axios");
-const Nft_collections = require("../../models/Nft_collections");
-const Sequelize = require("sequelize");
-const Op = Sequelize.Op;
+const Nft_collections = require("./models/Nft_collections");
+
 
 const URL_LUKY = 'https://cms-cache.luckytrader.com/lucky/project-list?include=id,name,slug,updated_at';
 
