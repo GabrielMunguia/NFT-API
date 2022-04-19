@@ -29,7 +29,7 @@ const saveAllAssets = async (req = request, res = response) => {
     do {
       if (next !== null) {
         const resp = await axios.get(
-          `https://api.opensea.io/api/v1/assets?collection_slug=${slug}&limit=200&cursor=${next}`,
+          `https://api.opensea.io/api/v1/assets?collection_slug=${slug}&limit=200&cursor=${next}&include_orders=true`,
           confing
         );
         assets = assets.concat(resp.data.assets);
@@ -37,9 +37,10 @@ const saveAllAssets = async (req = request, res = response) => {
         //esperar dos segundos
       } else {
         const resp = await axios.get(
-          `https://api.opensea.io/api/v1/assets?collection_slug=${slug}&limit=200`,
+          `https://api.opensea.io/api/v1/assets?collection_slug=${slug}&limit=200&include_orders=true`,
           confing
         );
+        console.log(`https://api.opensea.io/api/v1/assets?collection_slug=${slug}&limit=200&include_orders=true`)
 
         assets = assets.concat(resp.data.assets);
         next = resp.data.next;
@@ -47,7 +48,7 @@ const saveAllAssets = async (req = request, res = response) => {
       console.log(i);
       i++;
       await new Promise((resolve) => setTimeout(resolve, 2000));
-    } while (next !== null);
+    } while (next !== null );
 
     assets = await generateRarity(assets);
 
@@ -73,6 +74,7 @@ const saveAllAssets = async (req = request, res = response) => {
       status: false,
       msg: "ERORRR",
       error,
+
     });
   }
 };
@@ -82,29 +84,72 @@ const saveAllAssets = async (req = request, res = response) => {
 
 
 
+
+
 //Devuelve todos los assets por slug 
 const getFullAsetsBySlug = async (req, res) => {
-try {
-  const { slug } = req.params;
-  const assets = await Nft.findAll({
-    where: {
+  try {
+
+
+    const { slug } = req.params;
+    const { page = 1, traits } = req.query;
+
+    const limit = 24;
+    const offset = (page - 1) * limit;
+    const traitsQuery=req.traitsQuery;
+    
+ 
+
+ 
+
+    const where = traitsQuery?{
+      
+        slug,
+        traits: {
+          [Op.or]: traitsQuery.map((trait) => {
+            return Sequelize.where(
+              Sequelize.fn("LOWER", Sequelize.col("traits")),
+              "LIKE",
+              `%${trait}%`
+            );
+          }),
+        },
+  
+
+
+    }:{
       slug,
-    },
-  });
+    }
 
-  const array=[];
-  assets.forEach(asset=>{
-    array.push(assetAdapter(asset));
-  });
+    const {rows,count} = await Nft.findAndCountAll({
+      limit,
+      offset,
+      where,
+    });
+    const assets= rows.map(asset=>{
+      return assetAdapter(asset);
+    })
 
-  res.json({ size: assets.length, array });
-} catch (error) {
-  res.status(500).json({
-    status: false,
-    msg: "Ocurrio un error",
-    error:error.message,
-  })
-}
+    
+    res.json({
+      status: true,
+      page,
+      total_pages: Math.ceil(count / limit),
+      count,
+      assets,
+    
+     
+    });
+
+
+  } catch (error) {
+    res.status(500).json({
+      status: false,
+      msg: "Ocurrio un error!",
+      error: error.message,
+    });
+  }
+
 };
 
 

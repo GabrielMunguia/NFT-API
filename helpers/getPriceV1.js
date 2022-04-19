@@ -1,6 +1,8 @@
 
 function main(asset) {
-  const orders = asset.orders;
+ try {
+  
+  const orders = asset.sell_orders;
   const orders_length = orders.length;
   const orders_array = [];
   let current_price_base;
@@ -37,16 +39,20 @@ function main(asset) {
       //current price en base al decimals
       current_price_base = current_price_number / Math.pow(10, decimals);
     } else {
-      console.log(null);
+
       return null;
     }
 
-    console.log(current_price_base);
+  
     return current_price_base;
   } else {
-    console.log(null);
+  
     return null;
   }
+ } catch (error) {
+   return null;
+  
+ }
 }
 
 module.exports = main;

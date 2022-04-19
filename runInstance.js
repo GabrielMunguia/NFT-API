@@ -15,8 +15,9 @@ const fork = require('child_process').fork;
 // }
 // );
 
-fork('process/process_collection/main.js');
-
+// fork('process/process_collection/main.js');
+ fork('process/job.js');
+// fork('process/index.js');
 
 
 
