@@ -98,7 +98,7 @@ const getFullAsetsBySlug = async (req, res) => {
 
 
     const { slug } = req.params;
-    const { page = 1, traits } = req.query;
+    const { page = 1, minPrice,maxPrice } = req.query;
 
     const limit = 24;
     const offset = (page - 1) * limit;
@@ -116,7 +116,7 @@ const order=orderBy?[
  
 ]
 
-    const where = traitsQuery ? {
+    let  where = traitsQuery ? {
 
       slug,
       traits: {
@@ -134,6 +134,26 @@ const order=orderBy?[
     } : {
       slug,
     }
+   //min price where 
+    if(minPrice &&!maxPrice){
+      where.price={
+        [Op.gte]:parseFloat(minPrice)
+      }
+    }
+    //max price where
+    if(maxPrice &&!minPrice){
+      where.price={
+        [Op.lte]:parseFloat(maxPrice)
+      }
+    }
+    //min and max price where
+    if(minPrice &&maxPrice){
+      where.price={
+        [Op.between]:[parseFloat(minPrice),parseFloat(maxPrice)]
+      }
+    }
+
+    
 
 
 

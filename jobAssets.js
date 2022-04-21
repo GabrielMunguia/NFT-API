@@ -3,14 +3,20 @@ const axios = require("axios");
 const cron = require("node-cron");
 const formateadorAsset = require("./helpers/formateadorAsset");
 const Nft = require("./models/Nft");
-
+const fs= require('fs');
 const NftCollection = require("./models/Nft_collections");
 const generateRarity = require("./utils/rarityScoreV3");
 axios.defaults.timeout = 90000000;
 
-cron.schedule(' 0 */12 * * *', () => {
+cron.schedule(' 0 */23 * * *', () => {
+ try {
   console.log('se ejecuto el job')
+  fs.appendFileSync(`jobAssets`, `se ejecuto el job ${new Date()} \n`);
   hacerPeticiones();
+ } catch (error) {
+  let errorText = `Error : Date: ${new Date()}  Mesagge : ${error.message}\n `;
+  fs.appendFileSync(`logs/jobAssets/JOBErrorSaveAsset.txt`, errorText);
+ }
 
 });
 
@@ -22,8 +28,6 @@ const getData = async () => {
         ['one_day_volume', 'DESC']
       ],
     });
-
-
 
     return resp;
 
@@ -39,41 +43,40 @@ const hacerPeticiones = async () => {
   try {
     const data = await getData();
 
-    for (let i = 600; i < 900; i++) {
+    for (let i = 0; i < 300; i++) {
 
-
-
-
+    try {
     
-
       console.log(data[i].slug);
 
       const resp = await guardarAsset(data[i].slug)
 
 
-
-
       console.log(` Slug : ${data[i].slug} size : ${resp}}`);
+    } catch (error) {
+      let errorText = `Error : Date: ${new Date()}  Mesagge : ${error.message}\n `;
 
-
-
-
-
+      fs.appendFileSync(`logs/jobAssets/ErrorSaveAsset.txt`, errorText);
+  
+    }
 
 
 
     }
   } catch (error) {
-    console.log('error');
-    console.log(error.message);
-    console.log(error);
+
+    let errorText = `Error : Date: ${new Date()}  Mesagge : ${error.message}\n `;
+
+    fs.appendFileSync(`logs/jobAssets/ErrorSaveAsset.txt`, errorText);
+
   }
 };
 
 
 
 const guardarAsset = async (slug) => {
-
+console.log(`este es el slug ,${slug}`)
+try {
   let confing = {
     headers: {
       "X-API-KEY": "c1051ef9ad3643a0abaeb5f2a7126352",
@@ -122,6 +125,12 @@ const guardarAsset = async (slug) => {
   }
 
   return assets.length;
+} catch (error) {
+  console.log('entro al error')
+  let errorText = `Error : Date: ${new Date()}  Mesagge : ${error.message}\n `;
+
+  fs.appendFileSync(`logs/jobAssets/ErrorSaveAsset.txt`, errorText);
+}
 }
 
 

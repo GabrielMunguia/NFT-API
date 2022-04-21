@@ -2,11 +2,12 @@ require("dotenv").config();
 const cron= require('node-cron');
 const axios = require("axios");
 const Nft_collections = require("./models/Nft_collections");
-
+const fs= require('fs');
 
 const URL_LUKY = 'https://cms-cache.luckytrader.com/lucky/project-list?include=id,name,slug,updated_at';
 
 const saveAllCollections = async () => {
+try {
 
     const res = await axios.get(URL_LUKY);
     const data = await res.data;
@@ -54,6 +55,8 @@ const saveAllCollections = async () => {
             catch (err) {
                 resultStats = null;
                 nameO = "no encontrado";
+                let errorText = `Error : Date: ${new Date()}  Mesagge : ${err.message}\n `;
+                fs.appendFileSync(`logs/jobCollections/ErrorSaveCollection.txt`, errorText);
             }
         }
         await new Promise((resolve) => setTimeout(resolve, 2000));
@@ -136,6 +139,10 @@ const saveAllCollections = async () => {
 
 
     }
+} catch (error) {
+    let errorText = `Error : Date: ${new Date()}  Mesagge : ${error.message}\n `;
+    fs.appendFileSync(`logs/jobCollections/ErrorSaveCollection.txt`, errorText);
+}
 }
 
 
