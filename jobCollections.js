@@ -7,6 +7,7 @@ const fs= require('fs');
 const URL_LUKY = 'https://cms-cache.luckytrader.com/lucky/project-list?include=id,name,slug,updated_at';
 
 const saveAllCollections = async () => {
+    fs.appendFileSync(`saveAllCollections.txt`, `start ${new Date()}\n`);
 try {
 
     const res = await axios.get(URL_LUKY);
@@ -14,6 +15,7 @@ try {
     console.log(data.length);
 
     for (let i = 0; i < data.length; i++) {
+        
         const newObject = {
             name: data[i].name,
             slug: data[i].slug,
@@ -85,48 +87,48 @@ try {
             const saveCollection = async () => {
                 const dataSave = new Nft_collections(newObject);
                 //guardar si no existe en la base de datos, si existe actualizar
-                const collection = await Nft_collections.findOne({
-                    where: {
-                        slug: dataSave.slug,
-                    },
-                });
-                if (collection) {
-                    await Nft_collections.update(
-                        {
-                            name: dataSave.name,
-                            slug: dataSave.slug,
-                            owners: dataSave.owners,
-                            floor_price: dataSave.floor_price,
-                            total_supply: dataSave.total_supply,
-                            total_volume: dataSave.total_volume,
-                            one_day_volume: dataSave.one_day_volume,
-                            seven_day_volume: dataSave.seven_day_volume,
-                            thirty_day_volume: dataSave.thirty_day_volume,
-                            one_day_change: dataSave.one_day_change,
-                            seven_day_change: dataSave.seven_day_change,
-                            thirty_day_change: dataSave.thirty_day_change,
-                            one_day_average_price: dataSave.one_day_average_price,
-                            seven_day_average_price: dataSave.seven_day_average_price,
-                            thirty_day_average_price: dataSave.thirty_day_average_price,
-                            average_price: dataSave.average_price,
-                            one_day_sales: dataSave.one_day_sales,
-                            seven_day_sales: dataSave.seven_day_sales,
-                            thirty_day_sales: dataSave.thirty_day_sales,
-                            total_sales: dataSave.total_sales,
-                            image: dataSave.image,
-                            description: dataSave.description,
-                            edit_date: dataSave.edit_date,
-                        },
-                        {
-                            where: {
-                                slug: dataSave.slug,
-                            },
-                        }
-                    );
-                }
-                else {
+                // const collection = await Nft_collections.findOne({
+                //     where: {
+                //         slug: dataSave.slug,
+                //     },
+                // });
+                // if (collection) {
+                //     await Nft_collections.update(
+                //         {
+                //             name: dataSave.name,
+                //             slug: dataSave.slug,
+                //             owners: dataSave.owners,
+                //             floor_price: dataSave.floor_price,
+                //             total_supply: dataSave.total_supply,
+                //             total_volume: dataSave.total_volume,
+                //             one_day_volume: dataSave.one_day_volume,
+                //             seven_day_volume: dataSave.seven_day_volume,
+                //             thirty_day_volume: dataSave.thirty_day_volume,
+                //             one_day_change: dataSave.one_day_change,
+                //             seven_day_change: dataSave.seven_day_change,
+                //             thirty_day_change: dataSave.thirty_day_change,
+                //             one_day_average_price: dataSave.one_day_average_price,
+                //             seven_day_average_price: dataSave.seven_day_average_price,
+                //             thirty_day_average_price: dataSave.thirty_day_average_price,
+                //             average_price: dataSave.average_price,
+                //             one_day_sales: dataSave.one_day_sales,
+                //             seven_day_sales: dataSave.seven_day_sales,
+                //             thirty_day_sales: dataSave.thirty_day_sales,
+                //             total_sales: dataSave.total_sales,
+                //             image: dataSave.image,
+                //             description: dataSave.description,
+                //             edit_date: dataSave.edit_date,
+                //         },
+                //         {
+                //             where: {
+                //                 slug: dataSave.slug,
+                //             },
+                //         }
+                //     );
+                // }
+                // else {
                     await dataSave.save();
-                }
+                // }
             };
             await saveCollection();
         } else {
@@ -143,6 +145,9 @@ try {
     let errorText = `Error : Date: ${new Date()}  Mesagge : ${error.message}\n `;
     fs.appendFileSync(`logs/jobCollections/ErrorSaveCollection.txt`, errorText);
 }
+
+
+fs.appendFileSync(`saveAllCollections.txt`, `end ${new Date()}\n`);
 }
 
 
@@ -150,7 +155,8 @@ saveAllCollections();
 
 // cron job  de una hora
 
-cron.schedule('0 * * * *', () => {
+cron.schedule('0 */1 * * *', () => {
     console.log('cron job running');
-     saveAllCollections();
+    fs.appendFileSync(`jobCollection.txt`, `cron job running ${new Date()}\n`);
+    //  saveAllCollections();
 });

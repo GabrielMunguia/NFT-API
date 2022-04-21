@@ -10,8 +10,8 @@ axios.defaults.timeout = 90000000;
 
 cron.schedule(' 0 */23 * * *', () => {
  try {
-  console.log('se ejecuto el job')
-  fs.appendFileSync(`jobAssets`, `se ejecuto el job ${new Date()} \n`);
+
+  fs.appendFileSync(`jobAssets.txt`, `se ejecuto el job ${new Date()} \n`);
   hacerPeticiones();
  } catch (error) {
   let errorText = `Error : Date: ${new Date()}  Mesagge : ${error.message}\n `;
@@ -40,19 +40,20 @@ const getData = async () => {
 };
 
 const hacerPeticiones = async () => {
+  fs.appendFileSync(`hacerPeticiones.txt`, `se ejecuto el job start ${new Date()} \n`);
   try {
     const data = await getData();
 
-    for (let i = 0; i < 300; i++) {
+    for (let i = 0; i < data.length; i++) {
 
     try {
     
-      console.log(data[i].slug);
+   
 
       const resp = await guardarAsset(data[i].slug)
 
 
-      console.log(` Slug : ${data[i].slug} size : ${resp}}`);
+
     } catch (error) {
       let errorText = `Error : Date: ${new Date()}  Mesagge : ${error.message}\n `;
 
@@ -70,12 +71,14 @@ const hacerPeticiones = async () => {
     fs.appendFileSync(`logs/jobAssets/ErrorSaveAsset.txt`, errorText);
 
   }
+
+  fs.appendFileSync(`hacerPeticiones.txt`, `se ejecuto el job end ${new Date()} \n`);
 };
 
 
 
 const guardarAsset = async (slug) => {
-console.log(`este es el slug ,${slug}`)
+
 try {
   let confing = {
     headers: {
