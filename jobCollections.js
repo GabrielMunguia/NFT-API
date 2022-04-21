@@ -45,6 +45,7 @@ try {
                 let aux= nombreNew.join("-");
                 nombreNew = aux;
                 nombreNew= nombreNew.toLowerCase();
+                newObject.slug = nombreNew;
 
 
 
