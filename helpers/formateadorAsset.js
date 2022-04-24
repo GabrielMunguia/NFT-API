@@ -7,8 +7,6 @@ const formateadorAsset = (asset) => {
     slug: asset.collection.slug ? asset.collection.slug : null,
     price: main(asset),
     serial_number:(asset.name&&asset.name!=="")?(asset.name.includes('#')?parseInt(asset.name.split('#')[1]):0):0,
-    animation_original_url:asset.animation_original_url?asset.animation_original_url:null,   
-    animation_url:asset.animation_url?asset.animation_url:null,  
     asset_contract_address: asset.asset_contract.address?asset.asset_contract.address:null,   
     asset_contract_asset_contract_type:asset.asset_contract.asset_contract_type?asset.asset_contract.asset_contract_type:null,  
     asset_contract_created_date: asset.asset_contract.created_date ? asset.asset_contract.created_date : null,   

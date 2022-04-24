@@ -13,12 +13,6 @@ const Nft = db.define('Nft', {
    },
    price:{
     type: DataTypes.FLOAT,
-    },
-    animation_original_url:{
-        type: DataTypes.STRING,
-    },
-    animation_url:{
-        type: DataTypes.STRING,
     }
    
     ,asset_contract_address:{
@@ -177,7 +171,8 @@ const Nft = db.define('Nft', {
         type: DataTypes.STRING,
     },
     traits:{
-        type: DataTypes.TEXT,
+        type: DataTypes.TEXT('long')
+
     }
 
    

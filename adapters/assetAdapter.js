@@ -6,8 +6,6 @@ const assetAdapter= (asset)=>{
         },
         serial_number:asset.serial_number,
         price:asset.price,
-        animation_original_url:asset.animation_original_url,
-        animation_url:asset.animation_url,
         asset_contract:{
             address:asset.asset_contract_address,
             asset_contract_type:asset.asset_contract_asset_contract_type,

@@ -44,7 +44,7 @@ const hacerPeticiones = async () => {
   try {
     const data = await getData();
 
-    for (let i = 0; i < data.length; i++) {
+    for (let i = 334; i < data.length; i++) {
 
     try {
     
