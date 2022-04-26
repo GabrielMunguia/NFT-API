@@ -44,13 +44,13 @@ const hacerPeticiones = async () => {
   try {
     const data = await getData();
 
-    // for (let i = 334; i < data.length; i++) {
+    for (let i = 335; i < data.length; i++) {
 
     try {
     
    
 
-      const resp = await guardarAsset("emblem-vault");
+      const resp = await guardarAsset(data[i].slug);
 
 
 
@@ -63,7 +63,7 @@ const hacerPeticiones = async () => {
 
 
 
-    // }
+    }
   } catch (error) {
 
     let errorText = `Error : Date: ${new Date()}  Mesagge : ${error.message}\n `;
