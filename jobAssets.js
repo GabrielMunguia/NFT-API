@@ -44,13 +44,13 @@ const hacerPeticiones = async () => {
   try {
     const data = await getData();
 
-    for (let i = 334; i < data.length; i++) {
+    // for (let i = 334; i < data.length; i++) {
 
     try {
     
    
 
-      const resp = await guardarAsset(data[i].slug)
+      const resp = await guardarAsset("emblem-vault");
 
 
 
@@ -63,7 +63,7 @@ const hacerPeticiones = async () => {
 
 
 
-    }
+    // }
   } catch (error) {
 
     let errorText = `Error : Date: ${new Date()}  Mesagge : ${error.message}\n `;
@@ -110,6 +110,8 @@ try {
       assets = assets.concat(resp.data.assets);
       next = resp.data.next;
     }
+
+    console.log(i);
 
     i++;
     await new Promise((resolve) => setTimeout(resolve, 2000));

@@ -1,0 +1,4 @@
+Error : Date: Mon Apr 25 2022 14:45:09 GMT-0600 (hora estándar central)  Mesagge : Cannot read properties of undefined (reading 'length')
+ Error : Date: Mon Apr 25 2022 15:24:37 GMT-0600 (hora estándar central)  Mesagge : connect EHOSTUNREACH 104.18.17.184:443
+ Error : Date: Mon Apr 25 2022 16:54:58 GMT-0600 (hora estándar central)  Mesagge : Data too long for column 'traits' at row 1
+ 

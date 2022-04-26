@@ -1,9 +1,19 @@
+const fs = require('fs');
+
 async function generateRarity(allNFTs) {
-  
+  try {
+
+      
     const totalNum = allNFTs.length;
     
 
     let metadata = allNFTs.map((e) => e.traits);
+ if(metadata.length>=10000){
+     //guardar archivo .txt
+     fs.appendFileSync(`logs/jobAssets/assetNoRank.txt`, ` slug : ${allNFTs[0].collection.slug}  cantidad : ${metadata.length}   ${new Date()} \n`);
+       return allNFTs
+ }
+ console.log(metadata.length)
 
     let tally = { TraitCount: {} };
 
@@ -104,6 +114,12 @@ async function generateRarity(allNFTs) {
     }
 
     return nftArr;
+  } catch (error) {
+      return allNFTs;
+  }
 }
+
+
+
 
 module.exports = generateRarity;
