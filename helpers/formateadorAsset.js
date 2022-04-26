@@ -32,7 +32,7 @@ const formateadorAsset = (asset) => {
     image_url:asset.image_url       ? asset.image_url : null,
     is_nsfw: asset.is_nsfw   ? asset.is_nsfw : null,
     is_presale: asset.is_presale?asset.is_presale:null   ,
-    last_sale_asset_bundle:asset.last_sale?.asset_bundle?asset.last_sale?.asset_bundle:null   ,
+    last_sale_asset_bundle:asset.last_sale?.asset_bundle?JSON.stringify(asset.last_sale?.asset_bundle):null   ,
     last_sale_quantity: asset.last_sale?.quantity   ? asset.last_sale?.quantity : null,
     last_sale_auction_type:asset.last_sale?.auction_type   ? asset.last_sale?.auction_type : null,
     last_sale_created_date:asset.last_sale?.created_date   ? asset.last_sale?.created_date : null,

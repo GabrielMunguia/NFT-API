@@ -1,32 +1,36 @@
-const axios = require("axios");
+
 const NftCollection = require("../models/Nft_collections");
 const { response, request } = require("express");
+
+const { QueryTypes } = require('sequelize');
+const db = require("../db/conexion");
+
+
 
 
 const getCollectionsDay= async (req, res) => {
 try {
-  const collections = await NftCollection.findAll({order: [
-    ['one_day_volume', 'DESC']
-],});
+
+
+const collectionsDay = await db.query("SELECT * FROM nft_collections as c WHERE (select count(*)from Nfts as n where n.slug=c.slug )>0 order by one_day_volume desc; ", { type: QueryTypes.SELECT });
   res.json({
     status: "ok",
-    data: collections,
+    data: collectionsDay,
   });
 } catch (error) {
   res.status(500).json({
     status: "error",
-    message: error,
+    message: error.message,
   })
 }
 };
 const getCollectionsWeek= async (req, res) => {
   try {
-    const collections = await NftCollection.findAll({order: [
-      ['seven_day_volume', 'DESC']
-  ],});
+
+    const collectionsWeek = await db.query("SELECT * FROM nft_collections as c WHERE (select count(*)from Nfts as n where n.slug=c.slug )>0 order by seven_day_volume desc; ", { type: QueryTypes.SELECT });
     res.json({
       status: "ok",
-      data: collections,
+      data: collectionsWeek,
     });
   } catch (error) {
     res.status(500).json({
@@ -37,12 +41,13 @@ const getCollectionsWeek= async (req, res) => {
   };
   const getCollectionsMoth= async (req, res) => {
     try {
-      const collections = await NftCollection.findAll({order: [
-        ['thirty_day_volume', 'DESC']
-    ],});
+  
+
+
+const collectionsMoth = await db.query("SELECT * FROM nft_collections as c WHERE (select count(*)from Nfts as n where n.slug=c.slug )>0 order by thirty_day_volume desc; ", { type: QueryTypes.SELECT });
       res.json({
         status: "ok",
-        data: collections,
+        data: collectionsMoth,
       });
     } catch (error) {
       res.status(500).json({
