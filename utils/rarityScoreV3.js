@@ -8,7 +8,7 @@ async function generateRarity(allNFTs) {
     
 
     let metadata = allNFTs.map((e) => e.traits);
- if(metadata.length>=10000){
+ if(metadata.length>=10050){
      //guardar archivo .txt
      fs.appendFileSync(`logs/jobAssets/assetNoRank.txt`, ` slug : ${allNFTs[0].collection.slug}  cantidad : ${metadata.length}   ${new Date()} \n`);
        return allNFTs
