@@ -1,12 +1,15 @@
-const { formatPriceAsset } = require("./formateadorPrecio");
+
 const main = require('../helpers/getPriceV1');
+const { formateadorNombre } = require("./formateadorNombre");
 
 const formateadorAsset = (asset) => {
+
+  const nombreFormateado=formateadorNombre(asset);
   const nuevoAsset = {
-    name: asset.name?asset.name : null,   
+    name: asset.name?nombreFormateado : null,   
     slug: asset.collection.slug ? asset.collection.slug : null,
     price: main(asset),
-    serial_number:(asset.name&&asset.name!=="")?(asset.name.includes('#')?parseInt(asset.name.split('#')[1]):0):0,
+    serial_number:(nombreFormateado&&nombreFormateado!=="")?(nombreFormateado.includes('#')?parseInt(nombreFormateado.split('#')[1]):0):0,
     asset_contract_address: asset.asset_contract.address?asset.asset_contract.address:null,   
     asset_contract_asset_contract_type:asset.asset_contract.asset_contract_type?asset.asset_contract.asset_contract_type:null,  
     asset_contract_created_date: asset.asset_contract.created_date ? asset.asset_contract.created_date : null,   
