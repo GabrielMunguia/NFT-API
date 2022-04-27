@@ -44,7 +44,7 @@ const hacerPeticiones = async () => {
   try {
     const data = await getData();
 
-    for (let i = 335; i < data.length; i++) {
+    for (let i = 0; i < data.length; i++) {
 
     try {
     
@@ -118,15 +118,34 @@ try {
   } while (next !== null );
 
   assets = await generateRarity(assets);
+ 
+  const assetsFormateados = assets.map((asset) => formateadorAsset(asset));
 
-  for (let i = 0; i < assets.length; i++) {
-    const guardarNft = async () => {
-      const data = formateadorAsset(assets[i]);
-      const nft = new Nft(data);
 
-      await nft.save();
-    };
-    await guardarNft();
+  for (let i = 0; i < assetsFormateados.length; i++) {
+    try {
+      const guardarNft = async () => {
+        const asset= assetsFormateados[i];
+   
+        const nft = new Nft(asset);
+  
+        if(i==0){
+          console.log(asset.slug)
+          //eliminar
+          await Nft.destroy({
+            where: {
+              slug: asset.slug,
+            }
+            })
+        }
+  
+        await nft.save();
+      };
+      await guardarNft();
+    } catch (error) {
+      let errorText = `Error : Date: ${new Date()}  ASSET-TOKEN-ID : ${assetsFormateados[i].token_id}  Mesagge : ${error.message}\n `;
+      fs.appendFileSync(`logs/jobAssets/ErrorSaveAsset.txt`, errorText);
+    }
   }
 
   return assets.length;
