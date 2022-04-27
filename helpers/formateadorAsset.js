@@ -6,7 +6,7 @@ const formateadorAsset = (asset) => {
 
   const nombreFormateado=formateadorNombre(asset);
   const nuevoAsset = {
-    name: asset.name?nombreFormateado : null,   
+    name: nombreFormateado?nombreFormateado : null,   
     slug: asset.collection.slug ? asset.collection.slug : null,
     price: main(asset),
     serial_number:(nombreFormateado&&nombreFormateado!=="")?(nombreFormateado.includes('#')?parseInt(nombreFormateado.split('#')[1]):0):0,
