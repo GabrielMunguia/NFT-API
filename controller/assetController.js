@@ -200,12 +200,32 @@ const getFullTraitsBySlug = async (req, res) => {
       attributes: ['traits'],
      where: { slug } ,
   });
+const traitsFilter={};
+  traits.map((asset) => {
+   try {
+    const traitList = JSON.parse(asset.traits);
+    traitList.map((t) => {
+      const type = (t.trait_type + "").toUpperCase();
+      const value = (t.value + "").toUpperCase();
+
+      if (traitsFilter[type] === undefined) {
+        traitsFilter[type] = [];
+      }
+
+      if (!traitsFilter[type].includes(value)) {
+        traitsFilter[type].push(value);
+      }
+    });
+   } catch (error) {
+     console.log(error.message)
+   }
+  });
 
 
   res.status(200).json({
     status: true,
     slug,
-    traits
+    traits:traitsFilter
    
   })
 } catch (error) {

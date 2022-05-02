@@ -7,3 +7,4 @@
  slug : acclimatedmooncats  cantidad : 19094   Tue Apr 26 2022 21:08:11 GMT-0600 (hora estándar central) 
  slug : hashmasks  cantidad : 16363   Tue Apr 26 2022 21:35:57 GMT-0600 (hora estándar central) 
  slug : clonex  cantidad : 19237   Tue Apr 26 2022 22:03:48 GMT-0600 (hora estándar central) 
+ slug : beanzofficial  cantidad : 19950   Mon May 02 2022 10:14:19 GMT-0600 (hora estándar central) 

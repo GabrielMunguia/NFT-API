@@ -50,6 +50,7 @@ const collectionsMoth = await db.query("SELECT * FROM nft_collections as c WHERE
         data: collectionsMoth,
       });
     } catch (error) {
+      console.log(error.message)
       res.status(500).json({
         status: "error",
         message: error,
