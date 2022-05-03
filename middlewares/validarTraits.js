@@ -37,7 +37,8 @@ const validarTraits=async  (req,res=response,next)=>{
      
          return res.status(401).json({
              msj:'Invalid traits',
-             example:"[name:string,value:string]"
+             example:"[name:string,value:string]",
+             send: traits
          });
      }
  }

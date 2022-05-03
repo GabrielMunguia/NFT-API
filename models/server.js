@@ -2,6 +2,21 @@ const express = require("express");
 const compression = require('compression')
 const cors = require('cors');
 const db = require("../db/conexion");
+const redis = require('redis');
+// const client =  redis.createClient({
+//   host: '127.0.0.1',
+//    port: 6379
+// });
+
+module.exports= client = redis.createClient({
+  url: 'redis://localhost:6379'
+})
+client.on('error', function (err) {
+  console.log('Error ' + err);
+});
+client.connect()
+
+
 class Server {
   constructor() {
     this.app = express();
@@ -16,8 +31,13 @@ class Server {
     //CONEXION A LA BASE DE DATOS
     this.dbConnection();
     //COmpresion de archivos
+
+    //Conectar redis
+   
     
   }
+
+  
 
   routes() {
 

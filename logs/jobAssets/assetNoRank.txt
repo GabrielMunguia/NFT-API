@@ -10,3 +10,5 @@
  slug : beanzofficial  cantidad : 19950   Mon May 02 2022 10:14:19 GMT-0600 (hora estándar central) 
  slug : acrocalypse  cantidad : 10419   Mon May 02 2022 10:23:23 GMT-0600 (hora estándar central) 
  slug : acclimatedmooncats  cantidad : 19095   Mon May 02 2022 11:08:59 GMT-0600 (hora estándar central) 
+ slug : beanzofficial  cantidad : 19950   Tue May 03 2022 14:25:56 GMT-0600 (hora estándar central) 
+ slug : acrocalypse  cantidad : 10419   Tue May 03 2022 14:36:58 GMT-0600 (hora estándar central) 

@@ -7,13 +7,18 @@ const Sequelize = require("sequelize");
 const Op = Sequelize.Op;
 const generateRarity = require("../utils/rarityScoreV3");
 
+
 axios.defaults.timeout = 90000000;
+
+
 
 
 
 //Guarda todos los assets de una colleccion;
 const saveAllAssets = async (req = request, res = response) => {
   try {
+
+  
     const { slug } = req.params;
     let confing = {
       headers: {
@@ -95,8 +100,8 @@ const saveAllAssets = async (req = request, res = response) => {
 //Devuelve todos los assets por slug 
 const getFullAsetsBySlug = async (req, res) => {
   try {
-
-
+ 
+  
     const { slug } = req.params;
     const { page = 1, minPrice,maxPrice } = req.query;
 
@@ -107,6 +112,29 @@ const getFullAsetsBySlug = async (req, res) => {
     const orders=req.order;
 
 
+    const url=`assetsBySlug-${slug}-page-${page}-where-${JSON.stringify(traitsQuery)}-min-${minPrice}-max-${maxPrice};`
+
+
+
+    const cache = await  client.get(url, async (err, reply) => {
+
+     if(err){
+       console.log('entro al error')
+     }
+     
+     if (reply) {
+       //cerrar conexion
+       client.quit();
+      
+     } 
+   })
+   
+   
+   if(cache){
+     
+  
+     return res.json(JSON.parse(cache));
+   }
 
 const order=orderBy?[
   [orderBy, orders],
@@ -153,7 +181,6 @@ const order=orderBy?[
       }
     }
 
-    
 
 
 
@@ -168,9 +195,24 @@ const order=orderBy?[
     const assets = rows.map(asset => {
       return assetAdapter(asset);
     })
+   
+     client.set(url,JSON.stringify({
+      status: true,
+      page,
+      total_pages: Math.ceil(count / limit),
+      count,
+      assets,
 
 
-    res.json({
+    }),(err,reply)=>{
+     
+      if(err)console.log(err);
+     
+     
+    });
+    client.expire( url,  82800)
+
+    return res.json({
       status: true,
       page,
       total_pages: Math.ceil(count / limit),
@@ -179,6 +221,8 @@ const order=orderBy?[
 
 
     });
+   
+    
 
 
   } catch (error) {
@@ -196,6 +240,31 @@ const order=orderBy?[
 const getFullTraitsBySlug = async (req, res) => {
   try {
     const { slug } = req.params;
+    const url = `traitsBySlug-${slug}`;
+   
+ const cache = await  client.get(url, async (err, reply) => {
+
+  if(err){
+    console.log('entro al error')
+  }
+  
+  if (reply) {
+    //cerrar conexion
+    client.quit();
+    return res.json({
+      status: true,
+     
+      extra:"true"
+    });
+  } 
+})
+
+
+if(cache){
+
+  return res.json(JSON.parse(cache));
+}
+
   const traits=   await Nft.findAll({
       attributes: ['traits'],
      where: { slug } ,
@@ -221,6 +290,20 @@ const traitsFilter={};
    }
   });
 
+
+  client.set(url,JSON.stringify({
+    status: true,
+    slug,
+    traits:traitsFilter
+
+
+  }),(err,reply)=>{
+   
+    if(err)console.log(err);
+   
+   
+  });
+  client.expire( url,  82800)
 
   res.status(200).json({
     status: true,
