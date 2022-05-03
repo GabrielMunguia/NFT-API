@@ -112,8 +112,8 @@ const getFullAsetsBySlug = async (req, res) => {
     const orders=req.order;
 
 
-    const url=`assetsBySlug-${slug}-page-${page}-where-${JSON.stringify(traitsQuery)}-min-${minPrice}-max-${maxPrice};`
-
+    const url=`assetsBySlug-${slug}-page-${page}-where-${JSON.stringify(traitsQuery)}-min-${minPrice}-max-${maxPrice}-orderBy${orderBy}-orders-${orders};`
+console.log(orderBy,"-",orders)
 
 
     const cache = await  client.get(url, async (err, reply) => {
